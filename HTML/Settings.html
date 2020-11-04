@@ -1,0 +1,90 @@
+<html>
+    <head>
+        <base target="_self">
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+<body>
+    <div class="container">
+        <h4 style="color:#abb2bf;">Settings</h4>
+
+        <h5 style="color:#abb2bf;">Qualification</h5>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="lblQualiTeams" type="text">
+                <label for="lblQualiTeams">Qualification teams:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="cboQuali" required>
+                    <option value="" disabled selected>Type of Qualification</option>
+                    <option value="1">Without qualification</option>
+                    <option value="2">Double elimination</option>
+                    <option value="3">Single elimination</option>
+                    <option value="4">Single elimination & repechage</option>
+                    <option value="5">Groups</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="lblQualiGroups" type="text">
+                <label for="lblQualiGroups"># of teams in groups:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="cboQualiWithBracket" required>
+                    <option value="" disabled selected>Bracket included?</option>
+                    <option value="1">Yes</option>
+                    <option value="2">No</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="lblQualiAdvanced" type="text">
+                <label for="lblQualiAdvanced"># of teams advancing from qualification:</label>
+            </div>
+        </div>
+
+        <h5 style="color:#abb2bf;">Main tournament</h5>
+
+        <button id="btnNew" type="submit" class="waves-effect waves-light btn red">
+                <i class="material-icons left">account_circle</i>Ulozit
+        </button>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var selects = document.querySelectorAll('select');
+            var selectInstances = M.FormSelect.init(selects);
+            var dates = document.querySelectorAll('.datepicker');
+            var dateInstances = M.Datepicker.init(dates);
+        });
+
+        document.getElementById('btnNew').addEventListener("click", clickHandler);
+        function clickHandler() {
+            google.script.run.withSuccessHandler(onSuccess)
+                             .withFailureHandler(loginFailed)
+                             .test();
+        }
+
+        function onSuccess(msg) {
+
+        }
+
+        function loginFailed(error) {
+
+        }
+    </script>
+    </body>
+    </html>
