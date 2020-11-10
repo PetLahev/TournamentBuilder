@@ -17,5 +17,7 @@ function test() {
   var file = SpreadsheetApp.getActiveSpreadsheet();
   var sheet =  file.getActiveSheet();
   var cell = sheet.getActiveCell();
-  cell.setValue(Date.now());
+  var builder = new Brackets(file, 9, 5, 1);
+  builder.removeBrackets(sheet);
+  builder.build(sheet);
 }

@@ -1,4 +1,4 @@
-const  NAME_PREFIX = 'BracketRange';
+const NAME_PREFIX = 'BracketRange';
 /**
  * Provides information about a bracket (match) in a sheet.
  */
@@ -13,6 +13,13 @@ function Bracket() {
      */
     this.name = function () {
         return namedRangeString;
+    }
+
+    /**
+     * Gets the range of the named range.
+     */
+    this.range = function() {
+        return namedRange;
     }
 
     /**
@@ -36,7 +43,7 @@ function Bracket() {
      */
     this.bottomBracket = function () {
         if (namedRange == null) return null;
-        return namedRange.getCell(namedRange.getLastRow(), 1);
+        return namedRange.getCell(this.getRowsDifference(), 1);
     }
 
     /**
@@ -109,7 +116,7 @@ function Bracket() {
     * Sets the text in the middle of the two brackets
     * @param {string} content Te text to be inserted.
     */
-    this.setMiddleText = function(content) {
+    this.setMiddleText = function (content) {
         if (namedRange == null) return;
         var rng = this.middleCell();
         rng.setValue(content);

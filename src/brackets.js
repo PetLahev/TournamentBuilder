@@ -71,7 +71,24 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
         }
 
         // build the golden and bronze medal matches
+        // change the match index as the final is always the last match
+        var finalBracket = sheetBrackets[sheetBrackets.length - 1];
+        setBracketItem_(self.sheet, finalBracket.middleCell().offset(0, 1, 1, 1));
+        self.spreadsheet.setNamedRange(`${NAME_PREFIX}${matchIndex}`, finalBracket.range());
 
+        bronzeMedalMatch(cell1, cell2, matchIndex, bracketIndex);
+    }
+
+    function bronzeMedalMatch(cell1, cell2, matchIndex, bracketIndex) {
+        var semifinalBracket = sheetBrackets.find(br => br.columnIndex() == colIndex - 2
+            && br.bracketIndex() == 2);
+        var bottomBracketRowIndex = semifinalBracket.bottomBracket().getRowIndex();
+        var cell1 = self.sheet.getRange(bottomBracketRowIndex + 2, colIndex - 1);
+        var cell2 = self.sheet.getRange(cell1.getRowIndex() + CELLS_INSIDE_BRACKETS - 1, colIndex - 1);
+        formatBracket(cell1, cell2, matchIndex - 1, bracketIndex);
+        var bronzeBracket = sheetBrackets[sheetBrackets.length - 1];
+        setBracketItem_(self.sheet, bronzeBracket.middleCell().offset(0, 1, 1, 1));
+        return { cell1, cell2 };
     }
 
     function getNextPosition_(round, columnIndex, match, topCellPos, bottomCellPos) {
@@ -81,8 +98,10 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
         }
         else {
             // need to get the previous column matches based on the value at the 'match'
-            var firstBracket = sheetBrackets.find(br => br.columnIndex() == columnIndex - 1 && br.bracketIndex() == match + 1);
-            var secondBracket = sheetBrackets.find(br => br.columnIndex() == columnIndex - 1 && br.bracketIndex() == match + 2);
+            var firstBracket = sheetBrackets.find(br => br.columnIndex() == columnIndex - 1
+                && br.bracketIndex() == match + 1);
+            var secondBracket = sheetBrackets.find(br => br.columnIndex() == columnIndex - 1
+                && br.bracketIndex() == match + 2);
             if (firstBracket) topCellPos = firstBracket.middleCell().getRowIndex();
             if (secondBracket) bottomCellPos = secondBracket.middleCell().getRowIndex();
         }
