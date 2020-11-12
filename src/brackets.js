@@ -58,14 +58,16 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
         var bottomCellPos = topCellPos + CELLS_INSIDE_BRACKETS - 1;
         for (let round = 0; round < rounds; round++) {
             bracketIndex = 1; // reset the index of a bracket for each column
+            let matchIndexInColumn = 3;
             if (round > 0) {
-                ({ topCellPos, bottomCellPos } = getNextPosition_(round, colIndex, 0, topCellPos, bottomCellPos));
+                ({ topCellPos, bottomCellPos } = getNextPosition_(round, colIndex, 1, topCellPos, bottomCellPos));
             }
             for (let match = 0; match < Math.pow(2, rounds - round - 1); match++) {
                 var cell1 = self.sheet.getRange(topCellPos, colIndex);
                 var cell2 = self.sheet.getRange(bottomCellPos, colIndex);
                 bracketIndex = formatBracket(cell1, cell2, matchIndex++, bracketIndex);
-                ({ topCellPos, bottomCellPos } = getNextPosition_(round, colIndex, match + 2, topCellPos, bottomCellPos));
+                ({ topCellPos, bottomCellPos } = getNextPosition_(round, colIndex, matchIndexInColumn, topCellPos, bottomCellPos));
+                matchIndexInColumn += 2;
             }
             colIndex++;
         }
@@ -99,9 +101,9 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
         else {
             // need to get the previous column matches based on the value at the 'match'
             var firstBracket = sheetBrackets.find(br => br.columnIndex() == columnIndex - 1
-                && br.bracketIndex() == match + 1);
+                && br.bracketIndex() == match);
             var secondBracket = sheetBrackets.find(br => br.columnIndex() == columnIndex - 1
-                && br.bracketIndex() == match + 2);
+                && br.bracketIndex() == match);
             if (firstBracket) topCellPos = firstBracket.middleCell().getRowIndex();
             if (secondBracket) bottomCellPos = secondBracket.middleCell().getRowIndex();
         }
