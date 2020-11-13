@@ -20,14 +20,14 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
 
     /**
      * 
-     * @param {*} sheet
+     * @param {Sheet} sheet
      */
     this.build = function (sheet) {
 
         self.sheet = sheet;
         rounds = Math.ceil(Math.log(teams) / Math.log(2));
-        // if the number of players is not power of 2, this calculates how many matches needs to played
-        // before it's power of 2
+        // if the number of players is not power of 2, this calculates how many matches 
+        // needs to played before it's power of 2
         var numOfPreBracketMatches = teams - Math.pow(2, Math.trunc(Math.log(teams) / Math.log(2)));
 
         if (self.type == BracketsTypeEnum.standard) {
@@ -116,12 +116,30 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
      */
     this.collectBrackets = function (sheet) {
         var ranges = sheet.getNamedRanges();
+        let names = [];
         ranges.forEach(element => {
             if (element.getName().startsWith(NAME_PREFIX)) {
-                let bracket = new Bracket();
-                // TODO: Need to add index of the bracket in the column
-                sheetBrackets.push(bracket.addNameToClass(element));
+                names.push(element);
             }
+        });
+
+        if (names.length == 0) return;
+        names.sort(function (name1, name2) {
+            return sortByColumnThenByRow_(name1.getRange(), name2.getRange());
+        });
+
+        let colIndex = names[0].getRange().getColumn();
+        let bracketIndex = 0;
+        names.forEach(element => {
+            if (colIndex == element.getRange().getColumn()) {
+                bracketIndex++;
+            }
+            else {
+                colIndex = element.getRange().getColumn();
+                bracketIndex = 1;
+            }
+            let bracket = new Bracket();
+            sheetBrackets.push(bracket.addNameToClass(element, bracketIndex));
         });
     }
 
@@ -162,5 +180,23 @@ function Brackets(spreadsheet, teams, startPosition, bracketType) {
         rng.setBorder(null, null, true, null, false, false, 'black', SpreadsheetApp.BorderStyle.SOLID);
         sheet.setRowHeight(rng.getRowIndex(), BRACKET_HEIGHT)
         sheet.setColumnWidth(rng.getColumnIndex(), BRACKET_WIDTH);
+    }
+
+    function sortByColumnThenByRow_(rng1, rng2) {
+
+        if (rng1.getColumn() > rng2.getColumn()) {
+            return 1;
+        } else if (rng1.getColumn() < rng2.getColumn()) {
+            return -1;
+        }
+
+        // Else go to the 2nd item
+        if (rng1.getRowIndex() < rng2.getRowIndex()) {
+            return -1;
+        } else if (rng1.getRowIndex() > rng2.getRowIndex()) {
+            return 1
+        } else { // nothing to split them
+            return 0;
+        }
     }
 }

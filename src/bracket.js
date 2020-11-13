@@ -31,6 +31,14 @@ function Bracket() {
     }
 
     /**
+     * Returns index of the first row of the stored named range.
+     */
+    this.rowIndex = function() {
+        if (namedRange == null) return 0;
+        namedRange.getCell(1, 1).getRowIndex();
+    }
+
+    /**
      * Returns first cell of the bracket as a range.
      */
     this.topBracket = function () {
@@ -95,9 +103,11 @@ function Bracket() {
     /**
      * Adds existing named range to the class
      * @param {Range} range a reference to a range of named range
+     * @param {number} bracketIndex index of given range (bracket) at the particular column
      */
-    this.addNameToClass = function (range) {
+    this.addNameToClass = function (range, bracketIndex) {
         namedRangeString = range.getName();
+        bracketInColumn = bracketIndex;
         namedRange = range;
     }
 
