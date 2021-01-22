@@ -17,7 +17,7 @@ function test() {
   var file = SpreadsheetApp.getActiveSpreadsheet();
   var sheet =  file.getActiveSheet();
   var cell = sheet.getActiveCell();
-  var builder = new Brackets(file, 9, 5, 1);
+  var builder = new StandardBracket(file, 8, 5, BracketsType.Standard);
   builder.removeBrackets(sheet);
   builder.build(sheet);
 }

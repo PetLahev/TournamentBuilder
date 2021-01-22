@@ -5,7 +5,7 @@
 const BRACKET_NAME_PREFIX: string = 'BracketRange';
 
 /**
- *
+ *  Represent one bracket at a sheet with connectors and all cells.
  */
 class Bracket {
 
